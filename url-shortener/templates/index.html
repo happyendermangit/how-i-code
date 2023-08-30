@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Url shortener</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Poppins:wght@500&family=Roboto+Mono&family=Roboto:wght@500&display=swap');
+    body,html{
+        font-family: 'Montserrat', sans-serif;
+    }
+    .perfect-width{
+        width: 300px;
+    }
+</style>
+</head>
+<body>
+    <center><br><br>
+    <h1>Url shortener</h1>
+    <div>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">URL adress: (Must start with https:// or http://)</label>
+          <input type="url" class="form-control perfect-width" placeholder="https://example.com" id="url">
+        </div>
+        <div class="mb-3">
+            <label for="basic-url" class="form-label">Your vanity URL (optional)</label>
+            <div class="input-group  perfect-width">
+              <span class="input-group-text" id="basic-addon3">http://localhost/</span>
+              <input type="text" class="form-control" id="vanity" aria-describedby="basic-addon3 basic-addon4">
+            </div>
+        </div>
+          
+
+        <button type="submit" class="btn btn-primary" onclick="shorten()">Shorten it.</button>
+    </div>
+    <br><br><br>
+    <p>Made by happy enderman.</p>
+</center>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script>
+    function shorten(){
+        let body = {url:document.getElementById('url').value}
+        if (document.getElementById('vanity').value){
+            body.custom_code = document.getElementById('vanity').value
+        }
+        const x = new XMLHttpRequest();
+        x.open('POST','/api/v1/short')
+        x.setRequestHeader('content-type',"application/json")
+        x.send(JSON.stringify(body))
+        x.onload = function(){
+            let res = JSON.parse(x.responseText)
+            if (res.error){
+                alert(`❌ ERROR:\n${res.error} (${res.code})`)
+                
+            }else{
+                prompt('Here is the shortened url:',location.href +"redirect/"+ res.code)
+            }
+        }
+    }
+</script>
+</body>
+</html>
